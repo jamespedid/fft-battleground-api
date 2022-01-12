@@ -3,9 +3,14 @@
   "author": "jamespedid",
   "version": "1.0.0",
   "main": "dist/index.js",
+  "homepage": "https://github.com/jamespedid/fft-battleground-api",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:jamespedid/fft-battleground-api.git"
+  },
   "scripts": {
     "build": "tsc",
-    "prepublish": "build"
+    "prepublish": "npm run build"
   },
   "dependencies": {
     "axios": "^0.24.0"
