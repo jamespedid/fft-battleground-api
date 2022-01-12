@@ -4,7 +4,7 @@ export interface TournamentsLatestParams {
     totalPages?: number
     limit?: number
     before?: number
-    filter?: string
+    filter?: 'complete'
 }
 
 export interface ChampionQueryParams {
@@ -115,7 +115,7 @@ class Tournaments {
     }
 
     async* latest({
-        totalPages = undefined,
+        totalPages = 1,
         limit = 50,
         before = undefined,
         filter = undefined,
@@ -156,7 +156,7 @@ class Tournaments {
                     params.before = Number(url.searchParams.get('before') as string);
                 }
                 if (url.searchParams.has('filter')) {
-                    params.filter = url.searchParams.get('filter') as string;
+                    params.filter = url.searchParams.get('filter') as 'complete' | undefined;
                 }
                 more = true
             } else {
@@ -179,11 +179,11 @@ class Champions {
     }
 
     async* query({
-        totalPages = undefined,
-        season,
-        sort,
-        limit,
-        after,
+        totalPages = 1,
+        season = undefined,
+        sort = undefined,
+        limit = 50,
+        after = undefined,
     }: ChampionQueryParams): AsyncIterable<ChampionData> {
         totalPages = totalPages ?? Infinity;
         let pageCount = 0;
@@ -230,13 +230,13 @@ class Champions {
         } while (more)
     }
 
-    byRank(params: ChampionQueryParams): AsyncIterable<ChampionData> {
-        params.sort = 'rank';
+    byRank(params: Omit<ChampionQueryParams, 'sort'>): AsyncIterable<ChampionData> {
+        (params as ChampionQueryParams).sort = 'rank';
         return this.query(params);
     }
 
-    latest(params: ChampionQueryParams): AsyncIterable<ChampionData> {
-        params.sort = 'latest';
+    latest(params: Omit<ChampionQueryParams, 'sort'>): AsyncIterable<ChampionData> {
+        (params as ChampionQueryParams).sort = 'latest';
         return this.query(params);
     }
 
